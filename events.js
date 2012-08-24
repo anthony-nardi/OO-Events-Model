@@ -13,22 +13,26 @@ var events = (function (window, document, undefined) {
         
         } else { list[name].push([this, callback]); }
 
+        return this;
     };
 
     var off = function (name, callback, opt) {
 
         var event = list[name],
-            l = event.length,
+            events = event.length,
             i = 0;
+
+        if (!events) { return this; }
 
         if (opt) { window.removeEventListener(name, fire); }
 
-        for (i; i < l; i += 1) {
+        for (i; i < events; i += 1) {
             if (event[i][0] === this && event[i][1] === callback) {
                 event.splice(i, 1);
-                return this;
             }
         }
+
+        return this;
 
     };
 
@@ -36,37 +40,45 @@ var events = (function (window, document, undefined) {
 
         var event = undefined,
             data = undefined,
-            i = 0, l = 0,
-            current = [];
+            events = undefined,
+            current = undefined,
+            i = 0;
 
-        if (typeof e !== "string") {
+        if (typeof e === "string") {
 
-            name = e.type;
-        
-        } else {
-        
             name = e;
             data = arguments[1];
         
+        } else {
+            
+            name = e.type;
+       
         }
 
         event = list[name];
 
         if (event && event.length) {
            
-            l = event.length;
+            events = event.length;
 
-            for (i; i < l; i += 1) {
+            for (i; i < events; i += 1) {
+
                 current = event[i];
                 current[1].apply(current[0], [data]);
+           
             }
         }
+
+        return this;
 
     };
 
     returnObject = function(name, callback) { return on(name, callback) };
     
     returnObject.list = list;
+    returnObject.on = on;
+    returnObject.off = off;
+    returnObject.fire = fire;
 
     return returnObject;
 
