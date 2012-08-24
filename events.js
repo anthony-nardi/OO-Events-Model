@@ -8,11 +8,13 @@ var events = (function (window, document, undefined) {
         if (typeof list[name] === "undefined" || !list[name].length) {
         
             window.addEventListener(name, fire);
+            list.push(name);
             list[name] = [];
             list[name].push([this, callback]);
         
         } else { list[name].push([this, callback]); }
 
+        console.log(list.length)
         return this;
     };
 
