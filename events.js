@@ -5,16 +5,16 @@ var events = (function (window, document, undefined) {
 
     var on = function (name, callback) {
         
-        if (typeof list[name] === "undefined" || !list[name].length) {
+        if (typeof list[name] === "undefined") {
         
             window.addEventListener(name, fire);
+            
             list.push(name);
             list[name] = [];
             list[name].push([this, callback]);
         
         } else { list[name].push([this, callback]); }
 
-        console.log(list.length)
         return this;
     };
 
@@ -54,6 +54,7 @@ var events = (function (window, document, undefined) {
         } else {
             
             name = e.type;
+            data = e;
        
         }
 
