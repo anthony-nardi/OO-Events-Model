@@ -1,21 +1,19 @@
 moduleLoader.imports("events", [], function () {
 
   var returnObject = {},
-  list = [];
+      list = [];
 
   var on = function (name, callback) {
   
     if (typeof list[name] === "undefined") {
     
-      console.log(typeof this)
-
       if (this instanceof Node) {
 
-      this.addEventListener(name, fire);
+        this.addEventListener(name, fire);
 
       } else {
 
-      window.addEventListener(name, fire);
+        window.addEventListener(name, fire);
       
       }
       
@@ -26,22 +24,21 @@ moduleLoader.imports("events", [], function () {
     } else { list[name].push([this, callback]); }
 
     return this;
-  
   };
 
   var off = function (name, callback, opt) {
 
     var event = list[name],
-      events = event.length,
-      i = 0;
+        i = 0;
 
-    if (!events) { return this; }
+    if (!event.length) { return this; }
 
     if (opt) { window.removeEventListener(name, fire); }
 
-    for (i; i < events; i += 1) {
+    for (i; i < event.length; i += 1) {
       if (event[i][0] === this && event[i][1] === callback) {
-      event.splice(i, 1);
+        event.splice(i, 1);
+        i -= 1;
       }
     }
 
@@ -52,10 +49,10 @@ moduleLoader.imports("events", [], function () {
   var fire = function (e) {
 
     var event = undefined,
-      data = undefined,
-      events = undefined,
-      current = undefined,
-      i = 0;
+        data = undefined,
+        events = undefined,
+        current = undefined,
+        i = 0;
 
     if (typeof e === "string") {
 
@@ -77,8 +74,8 @@ moduleLoader.imports("events", [], function () {
 
       for (i; i < events; i += 1) {
 
-      current = event[i];
-      current[1].apply(current[0], [data]);
+        current = event[i];
+        current[1].apply(current[0], [data]);
        
       }
     }
