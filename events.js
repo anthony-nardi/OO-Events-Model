@@ -1,4 +1,4 @@
-moduleLoader.imports("events", [], function () {
+var events = (function () {
 
   var returnObject = {},
       list = [];
@@ -93,4 +93,4 @@ moduleLoader.imports("events", [], function () {
 
   return returnObject;
 
-});
+}());
