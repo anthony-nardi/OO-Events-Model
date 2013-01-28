@@ -5,18 +5,10 @@ var events = (function () {
 
   var on = function (name, callback) {
   
-    if (typeof list[name] === "undefined") {
+    if (!list[name]) {
     
-      if (this instanceof Node) {
+      this instanceof Node ? this.addEventListener(name, fire) : window.addEventListener(name, fire);
 
-        this.addEventListener(name, fire);
-
-      } else {
-
-        window.addEventListener(name, fire);
-      
-      }
-      
       list.push(name);
       list[name] = [];
       list[name].push([this, callback]);
@@ -24,6 +16,7 @@ var events = (function () {
     } else { list[name].push([this, callback]); }
 
     return this;
+
   };
 
   var off = function (name, callback, opt) {
@@ -31,15 +24,17 @@ var events = (function () {
     var event = list[name],
         i = 0;
 
-    if (!event.length) { return this; }
+    if (opt) { this instanceof Node ? this.removeEventListener(name, fire) : window.removeEventListener(name, fire); }
 
-    if (opt) { window.removeEventListener(name, fire); }
+    if (event.length) {
 
-    for (i; i < event.length; i += 1) {
-      if (event[i][0] === this && event[i][1] === callback) {
-        event.splice(i, 1);
-        i -= 1;
+      for (i; i < event.length; i += 1) {
+        if (event[i][0] === this && event[i][1] === callback) {
+          event.splice(i, 1);
+          i -= 1;
+        } 
       }
+    
     }
 
     return this;
