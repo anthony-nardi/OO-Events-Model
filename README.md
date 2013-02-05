@@ -1,9 +1,10 @@
 # API
 ***
-### events.on(name, callback);
-### events.off(name, callback, [bool]);
-### events.fire(name, [object]);
-
+```javascript
+events.on(name, callback);
+events.off(name, callback, [bool]);
+events.fire(name, [object]);
+```
 # Examples
 ***
 ### Console.log keycode of key when key is pressed.
