@@ -8,15 +8,15 @@
 ***
 ### Console.log keycode of key when key is pressed.
 
-```
+```javascript
 events.on.call(window, "keydown", function(event){console.log(event.which)});
 ```
 to trigger the keydown event manually...
-```
+```javascript
 events.fire("keydown", {"which":"make up your own event data object"});
 ```
 turning off an event requires using non-anonymous function definitions
-```
+```javascript
 var callback = function(event){console.log(event.which)});
 
 events.on.call(window, "keydown", callback);
@@ -26,7 +26,7 @@ events.off.call(window, "keydown", callback);
 # Syntactic Sugar
 ***
 If you prefer to invoke these functions as methods instead of using the function.call syntax, simply add the following code to the page.
-```
+```javascript
 if (Object.prototype.on === undefined) {
   Object.prototype.on = events.on;
 }
