@@ -1,9 +1,8 @@
 var events = (function () {
 
-  var returnObject = {},
-      list = [];
+  var list = [],
 
-  var on = function (name, callback) {
+  on = function (name, callback) {
   
     if (!list[name]) {
     
@@ -17,14 +16,17 @@ var events = (function () {
 
     return this;
 
-  };
+  },
 
-  var off = function (name, callback, opt) {
+  off = function (name, callback, opt) {
 
     var event = list[name],
         i = 0;
 
-    if (opt) { this instanceof Node ? this.removeEventListener(name, fire) : window.removeEventListener(name, fire); }
+    if (opt) { 
+      this instanceof Node ? this.removeEventListener(name, fire) 
+      : window.removeEventListener(name, fire); 
+    }
 
     if (event.length) {
 
@@ -39,53 +41,33 @@ var events = (function () {
 
     return this;
 
-  };
+  },
 
-  var fire = function (e) {
-
-    var event = undefined,
-        data = undefined,
-        events = undefined,
-        current = undefined,
-        i = 0;
-
-    if (typeof e === "string") {
-
-      name = e;
-      data = arguments[1];
-    
-    } else {
+  
+  fire = function (event) {
       
-      name = e.type;
-      data = e;
-     
-    }
+    var type      = typeof event === "string" ? event : event.type,        
+        data      = typeof event === "string" ? arguments[1] : event,        
+        listeners = list[type],
+        listener  = undefined;
 
-    event = list[name];
-
-    if (event && event.length) {
-       
-      events = event.length;
-
-      for (i; i < events; i += 1) {
-
-        current = event[i];
-        current[1].apply(current[0], [data]);
-       
+    if (listeners.length) {
+      for (var i = 0; i < listeners.length; i += 1) {
+        listener = listeners[i];
+        listener[1].call(listener[0], data);
       }
     }
 
-    return this;
-
-  };
-
-  returnObject = function(name, callback) { return on(name, callback) };
+    return this;       
   
-  returnObject.list = list;
-  returnObject.on = on;
-  returnObject.off = off;
-  returnObject.fire = fire;
+  },
 
-  return returnObject;
+  events = Object.create({
+    'on'  : on,
+    'off' : off,
+    'fire': fire
+  });
+
+  return events;
 
 }());
