@@ -20,8 +20,7 @@ var events = (function () {
 
   off = function (name, callback, opt) {
 
-    var event = list[name],
-        i = 0;
+    var event = list[name];
 
     if (opt) { 
       this instanceof Node ? this.removeEventListener(name, fire) 
@@ -30,7 +29,7 @@ var events = (function () {
 
     if (event.length) {
 
-      for (i; i < event.length; i += 1) {
+      for (var i = 0; i < event.length; i += 1) {
         if (event[i][0] === this && event[i][1] === callback) {
           event.splice(i, 1);
           i -= 1;
@@ -69,5 +68,4 @@ var events = (function () {
   });
 
   return events;
-
 }());
