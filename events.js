@@ -1,30 +1,44 @@
+'use strict';
+
 var events = (function () {
 
-  var list = [],
+  var list = [];
 
-  on = function (name, callback) {
-  
+  function isElement (object) {
+    return object instanceof Node || object instanceof HTMLElement;
+  }
+
+  function on (name, callback) {
+
     if (!list[name]) {
-    
-      this instanceof Node ? this.addEventListener(name, fire) : window.addEventListener(name, fire);
 
-      list.push(name);
+      if (isElement(this)) {
+        this.addEventListener(name, fire);
+      } else {
+        window.addEventListener(name, fire);
+      }
+
       list[name] = [];
       list[name].push([this, callback]);
-    
-    } else { list[name].push([this, callback]); }
+
+    } else {
+      list[name].push([this, callback]);
+    }
 
     return this;
 
-  },
+  }
 
-  off = function (name, callback, opt) {
+  function off (name, callback, opt) {
 
     var event = list[name];
 
-    if (opt) { 
-      this instanceof Node ? this.removeEventListener(name, fire) 
-      : window.removeEventListener(name, fire); 
+    if (opt) {
+      if (isElement(this)) {
+        this.removeEventListener(name, fire);
+       } else {
+        window.removeEventListener(name, fire);
+       }
     }
 
     if (event.length) {
@@ -33,22 +47,22 @@ var events = (function () {
         if (event[i][0] === this && event[i][1] === callback) {
           event.splice(i, 1);
           i -= 1;
-        } 
+        }
       }
-    
+
     }
 
     return this;
 
-  },
+  }
 
-  
-  fire = function (event) {
-      
-    var type      = typeof event === "string" ? event : event.type,        
-        data      = typeof event === "string" ? arguments[1] : event,        
+
+  function fire (event) {
+
+    var type      = typeof event === 'string' ? event : event.type,
+        data      = typeof event === 'string' ? arguments[1] : event,
         listeners = list[type],
-        listener  = undefined;
+        listener;
 
     if (listeners.length) {
       for (var i = 0; i < listeners.length; i += 1) {
@@ -57,15 +71,14 @@ var events = (function () {
       }
     }
 
-    return this;       
-  
-  },
+    return this;
 
-  events = Object.create({
+  }
+
+  return {
     'on'  : on,
     'off' : off,
     'fire': fire
-  });
+  };
 
-  return events;
 }());
